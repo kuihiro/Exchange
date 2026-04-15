@@ -1,11 +1,4 @@
-Base snapshot expected on user side:
-- blink_ime-main-mode-badge-source.zip
-
-Related blink_ime history:
-- base commit in repository: 7696992e
-- exchange delta commit in repository: 562209e7
-
-Notes:
-- This exchange payload is intended to be copied over the extracted files from
-  blink_ime-main-mode-badge-source.zip.
-- Only the files listed in MANIFEST.txt need to be replaced.
+Base snapshot: blink_ime-main-mode-badge-source.zip
+Base repository: kuihiro/blink_ime
+Base working assumption: user's local copy is based on the mode-badge source zip, then manual file replacement is applied from this repo.
+Source commit carrying this delta: 47cea5f6

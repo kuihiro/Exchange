@@ -600,7 +600,14 @@ struct winsize __winSizeFromJSON(NSDictionary *json) {
 - (void)_onTerminalReady:(NSDictionary *)data
 {
   [_webView ready];
-  [_webView evaluateJavaScript:@"term_setInternalSKK(true);term_setInternalSKKMode('ascii');" completionHandler:nil];
+  NSLog(@"%@", @"BlinkIME terminalReady");
+  [_webView evaluateJavaScript:@"term_setInternalSKK(true);term_setInternalSKKMode('ascii');" completionHandler:^(id result, NSError *error) {
+    if (error) {
+      NSLog(@"%@", [NSString stringWithFormat:@"BlinkIME internalSKK init error=%@", error.localizedDescription ?: @"unknown"]);
+    } else {
+      NSLog(@"%@", @"BlinkIME internalSKK init ok");
+    }
+  }];
   NSArray *bgColor = data[@"bgColor"];
   if (bgColor && bgColor.count == 3) {
     UIColor *color = [UIColor colorWithRed:[bgColor[0] floatValue] / 255.0f

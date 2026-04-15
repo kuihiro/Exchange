@@ -1,11 +1,10 @@
-BASELINE
-blink_ime main commit: 7696992e
-local hand-applied base in use: blink_ime-main-mode-badge-source.zip
-
-CHANGED FILES
-Resources/term.js
-Blink/TermView.m
-
-PURPOSE
-Add JS-to-native debug logging for internal IME state.
-Look for lines starting with "BlinkJS" in the Xcode device console export.
+Delta commit: 47cea5f6
+Purpose: improve native/JS IME observability before replacing iPadOS IME with internal IME
+Changed files:
+- Blink/SmarterKeys/SmarterTermInput.swift
+- Blink/TermView.m
+- KB/Native/Views/KBWebView.swift
+Notes:
+- WORKLOG.md also changed in blink_ime, but it is omitted from Exchange because it is not needed for hand patching on the company machine.
+- Replace these files in the local blink tree, then rebuild.
+- After running on device, capture the Xcode debug console and look for lines beginning with BlinkIME and BlinkJS.
