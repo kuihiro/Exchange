@@ -1,9 +1,8 @@
-Delta commit: 591e3bdd
-Purpose: keep Ctrl mode switching separate from no-convert keys.
+Delta commit: 494cfc19
+Purpose: make internal IME mode independent from the current iPadOS language state.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
-- KB/Native/Views/KBWebView.swift
 Behavior:
-- Left/Right Ctrl no longer get hijacked by generic no-convert handling during composition.
-- Globe and Escape are explicit no-convert keys.
-- CapsLock-based IME toggle is removed.
+- `reportLang` now tells Blink JS the internal-mode language (`ja-JP-x-blink` / `en-US-x-blink`) instead of following the system language directly.
+- Raw key capture and selected key debug logging now follow the internal `hiragana` mode.
+- `setInternalSKKMode` now logs JS-side mode-set completion.

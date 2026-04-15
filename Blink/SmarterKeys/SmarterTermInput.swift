@@ -170,17 +170,20 @@ class CaretHider {
   }
   
   func reportLang() {
-    let lang = self.textInputMode?.primaryLanguage ?? ""
+    let systemLang = self.textInputMode?.primaryLanguage ?? ""
+    let lang = _blinkPreferredLang(systemLang: systemLang)
     kbView.lang = lang
-    if !lang.hasPrefix("ja") {
+    if !_isInternalJapaneseMode {
       _lastRawIMECompositionText = ""
     }
     _didApplyIMEAppearance = false
     reportLang(lang, isHardwareKB: kbView.traits.isHKBAttached)
     _debugIME("reportLang", extra: [
       "lang": lang,
+      "systemLang": systemLang,
       "hardware": kbView.traits.isHKBAttached,
       "internalRaw": _lastRawIMECompositionText,
+      "mode": _internalSKKMode,
     ])
     hideCaret()
   }
@@ -742,7 +745,7 @@ extension SmarterTermInput {
   }
 
   func captureHardwareRawIMEKey(_ key: UIKey) {
-    guard kbView.lang.hasPrefix("ja") else {
+    guard _isInternalJapaneseMode else {
       return
     }
 
@@ -793,7 +796,7 @@ extension SmarterTermInput {
 
   func debugHardwareKeyPhase(_ phase: String, key: UIKey) {
     let shouldLog =
-      kbView.lang.hasPrefix("ja") ||
+      _isInternalJapaneseMode ||
       key.keyCode == .keyboardCapsLock ||
       key.keyCode == .keyboardSpacebar ||
       key.keyCode == .keyboardReturnOrEnter ||
@@ -873,7 +876,18 @@ extension SmarterTermInput {
       "mode": mode,
       "reason": reason,
     ])
-    evaluateJavaScript("term_setInternalSKKMode('\(mode)');", completionHandler: nil)
+    reportLang()
+    evaluateJavaScript("term_setInternalSKKMode('\(mode)');") { [weak self] result, error in
+      guard let self = self else {
+        return
+      }
+      self._debugIME("setInternalSKKMode:js", extra: [
+        "mode": mode,
+        "reason": reason,
+        "result": result as? String ?? "",
+        "error": error?.localizedDescription ?? "",
+      ])
+    }
   }
 
   private static func _jsonStringLiteral(_ string: String) throws -> String {
@@ -892,6 +906,22 @@ extension SmarterTermInput {
     }
 
     return false
+  }
+
+  private var _isInternalJapaneseMode: Bool {
+    _internalSKKMode == "hiragana"
+  }
+
+  private func _blinkPreferredLang(systemLang: String) -> String {
+    if _isInternalJapaneseMode {
+      return "ja-JP-x-blink"
+    }
+
+    if systemLang.isEmpty {
+      return "en-US-x-blink"
+    }
+
+    return "en-US-x-blink"
   }
   
   func stuckKey() -> KeyCode? {
