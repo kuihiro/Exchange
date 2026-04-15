@@ -1,12 +1,11 @@
-Delta commit: 09e27a62
-Purpose: align internal IME controls with the user's Mac-like workflow on iPad.
+Delta commit: e6db34b0
+Purpose: diagnose why left Control does not appear to switch to US reliably.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
 - KB/Native/Views/KBWebView.swift
-Behavior:
-- Left Control tap -> ascii (US)
-- Right Control tap -> hiragana (JP)
-- Control+Space -> toggle ascii/hiragana
-- Globe key -> no-convert when composition/raw input is active
+Expected logs:
+- modifierTap with current mode
+- modifierTap:setUS for left Control
+- modifierTap:setJP for right Control
 Notes:
-- This assumes the iPadOS Command/Control swap is enabled, so the physical Mac-like shortcuts arrive as Control-based events inside Blink.
+- This is primarily a diagnostic delta so the next README log can tell whether left Control is failing at event classification or at actual mode switching.

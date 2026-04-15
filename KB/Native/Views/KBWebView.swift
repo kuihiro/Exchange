@@ -251,9 +251,8 @@ class KBWebView: KBWebViewBase {
       smarterInput.captureHardwareRawIMEKey(key)
 
       if key.keyCode == .keyboardSpacebar,
-         key.modifierFlags.contains(.control),
+         (key.modifierFlags.contains(.control) || key.modifierFlags.contains(.command)),
          !key.modifierFlags.contains(.alternate),
-         !key.modifierFlags.contains(.command),
          smarterInput.handleControlSpaceToggle() {
         return
       }
@@ -302,11 +301,6 @@ class KBWebView: KBWebViewBase {
     if let key = presses.first?.key, presses.count == 1,
        let smarterInput = self as? SmarterTermInput {
       smarterInput.debugHardwareKeyPhase("ended", key: key)
-
-      if key.keyCode.rawValue == 669,
-         smarterInput.handleNoConvertTriggerKey(reason: "globe") {
-        return
-      }
 
       if key.keyCode == .keyboardCapsLock,
          smarterInput.handleJapaneseToggleKey() {

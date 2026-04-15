@@ -602,6 +602,7 @@ extension SmarterTermInput {
       "lang": kbView.lang,
       "lastIME": _lastIMECompositionText,
       "lastRaw": _lastRawIMECompositionText,
+      "mode": _internalSKKMode,
     ])
 
     if _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty {
@@ -614,14 +615,21 @@ extension SmarterTermInput {
       return true
     }
 
-    switch keyCode {
-    case .keyboardLeftControl:
+    switch keyCode.rawValue {
+    case UIKeyboardHIDUsage.keyboardLeftControl.rawValue:
+      _debugIME("modifierTap:setUS", extra: [
+        "keyCode": keyCode.rawValue,
+      ])
       _setInternalSKKMode("ascii", reason: "modifierTap-leftControl")
       return true
-    case .keyboardRightControl:
+    case UIKeyboardHIDUsage.keyboardRightControl.rawValue:
+      _debugIME("modifierTap:setJP", extra: [
+        "keyCode": keyCode.rawValue,
+      ])
       _setInternalSKKMode("hiragana", reason: "modifierTap-rightControl")
       return true
-    case .keyboardLeftGUI, .keyboardRightGUI:
+    case UIKeyboardHIDUsage.keyboardLeftGUI.rawValue,
+         UIKeyboardHIDUsage.keyboardRightGUI.rawValue:
       return handleModifierTapNoConvert()
     default:
       return false
