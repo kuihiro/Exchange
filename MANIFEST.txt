@@ -1,7 +1,9 @@
-Delta commit: 217b3344
-Purpose: when a standalone modifier tap is observed during active Japanese composition and raw input exists, use it as a raw no-convert trigger before any old mode-toggle behavior.
+Delta commit: 04308df0
+Purpose: determine empirically whether Command+Space or Control+Space reaches Blink, or is consumed by iPadOS before delivery.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
 Notes:
 - Replace this file in the local blink tree, then rebuild.
-- Expected next log difference: BlinkIME modifierTap:noConvert and BlinkIME noConvert:start/noConvert:resolved should appear after the standalone modifier tap.
+- While Blink is focused, press Command+Space and Control+Space separately.
+- If the app receives either chord, the console will show BlinkIME spaceWithModifier:began/ended.
+- If pressing Command+Space never logs spaceWithModifier and instead opens system search, treat it as OS-reserved on this setup.

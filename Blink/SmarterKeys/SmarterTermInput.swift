@@ -780,6 +780,22 @@ extension SmarterTermInput {
       "lang": kbView.lang,
       "raw": _lastRawIMECompositionText,
     ])
+
+    if key.keyCode == .keyboardSpacebar {
+      let flags = key.modifierFlags
+      let observedShortcut =
+        flags.contains(.command) || flags.contains(.control)
+      if observedShortcut {
+        _debugIME("spaceWithModifier:" + phase, extra: [
+          "keyCode": key.keyCode.rawValue,
+          "characters": key.characters,
+          "charactersIgnoringModifiers": key.charactersIgnoringModifiers,
+          "flags": flags.rawValue,
+          "lang": kbView.lang,
+          "raw": _lastRawIMECompositionText,
+        ])
+      }
+    }
   }
 
   private func _applyIMEAppearance() {
