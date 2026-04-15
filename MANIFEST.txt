@@ -1,7 +1,7 @@
-Delta commit: 6ec111e6
-Purpose: trust actual hardware key presses for Japanese raw IME capture, even when keyboard traits incorrectly report software keyboard.
+Delta commit: 217b3344
+Purpose: when a standalone modifier tap is observed during active Japanese composition and raw input exists, use it as a raw no-convert trigger before any old mode-toggle behavior.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
 Notes:
 - Replace this file in the local blink tree, then rebuild.
-- Expected next log difference: BlinkIME rawKey lines should start accumulating raw="a", raw="an", raw="ant", raw="anti" during anti input.
+- Expected next log difference: BlinkIME modifierTap:noConvert and BlinkIME noConvert:start/noConvert:resolved should appear after the standalone modifier tap.

@@ -598,7 +598,20 @@ extension SmarterTermInput {
     _debugIME("modifierTap", extra: [
       "keyCode": keyCode.rawValue,
       "lang": kbView.lang,
+      "lastIME": _lastIMECompositionText,
+      "lastRaw": _lastRawIMECompositionText,
     ])
+
+    if _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty {
+      _debugIME("modifierTap:noConvert", extra: [
+        "keyCode": keyCode.rawValue,
+        "raw": _lastRawIMECompositionText,
+        "composition": _lastIMECompositionText,
+      ])
+      noConvertComposition()
+      return true
+    }
+
     switch keyCode {
     case .keyboardLeftControl:
       evaluateJavaScript("term_setInternalSKKMode('ascii');", completionHandler: nil)
