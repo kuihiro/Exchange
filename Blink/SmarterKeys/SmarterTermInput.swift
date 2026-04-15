@@ -88,6 +88,7 @@ class CaretHider {
   private var _pendingNoConvertOriginalText: String? = nil
   private var _caretHider: CaretHider? = nil
   private var _didApplyIMEAppearance = false
+  private var _internalSKKMode = "ascii"
 
   private func _debugIME(_ message: String, extra: [String: Any] = [:]) {
     if extra.isEmpty {
@@ -614,16 +615,38 @@ extension SmarterTermInput {
 
     switch keyCode {
     case .keyboardLeftControl:
-      evaluateJavaScript("term_setInternalSKKMode('ascii');", completionHandler: nil)
+      _setInternalSKKMode("ascii", reason: "modifierTap-leftControl")
       return true
     case .keyboardRightControl:
-      evaluateJavaScript("term_setInternalSKKMode('hiragana');", completionHandler: nil)
+      _setInternalSKKMode("hiragana", reason: "modifierTap-rightControl")
       return true
     case .keyboardLeftGUI, .keyboardRightGUI:
       return handleModifierTapNoConvert()
     default:
       return false
     }
+  }
+
+  func handleJapaneseToggleKey() -> Bool {
+    _debugIME("japaneseToggleKey", extra: [
+      "lang": kbView.lang,
+      "lastIME": _lastIMECompositionText,
+      "lastRaw": _lastRawIMECompositionText,
+      "mode": _internalSKKMode,
+    ])
+
+    if _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty {
+      _debugIME("japaneseToggleKey:noConvert", extra: [
+        "raw": _lastRawIMECompositionText,
+        "composition": _lastIMECompositionText,
+      ])
+      noConvertComposition()
+      return true
+    }
+
+    let nextMode = _internalSKKMode == "hiragana" ? "ascii" : "hiragana"
+    _setInternalSKKMode(nextMode, reason: "japaneseToggleKey")
+    return true
   }
 
   private func _replaceMarkedTextIfPossible(with text: String) -> Bool {
@@ -830,6 +853,15 @@ extension SmarterTermInput {
       _ = self.resignFirstResponder()
       _ = self.becomeFirstResponder()
     }
+  }
+
+  private func _setInternalSKKMode(_ mode: String, reason: String) {
+    _internalSKKMode = mode
+    _debugIME("setInternalSKKMode", extra: [
+      "mode": mode,
+      "reason": reason,
+    ])
+    evaluateJavaScript("term_setInternalSKKMode('\(mode)');", completionHandler: nil)
   }
 
   private static func _jsonStringLiteral(_ string: String) throws -> String {

@@ -1,9 +1,11 @@
-Delta commit: 04308df0
-Purpose: determine empirically whether Command+Space or Control+Space reaches Blink, or is consumed by iPadOS before delivery.
+Delta commit: 9aeed904
+Purpose: use the physical 日/英 key as the shortest-path internal IME control.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
-Notes:
-- Replace this file in the local blink tree, then rebuild.
-- While Blink is focused, press Command+Space and Control+Space separately.
-- If the app receives either chord, the console will show BlinkIME spaceWithModifier:began/ended.
-- If pressing Command+Space never logs spaceWithModifier and instead opens system search, treat it as OS-reserved on this setup.
+- KB/Native/Views/KBWebView.swift
+Behavior:
+- During active Japanese composition with raw input present: 日/英 key runs no-convert.
+- Otherwise: 日/英 key toggles internal IME mode between ascii and hiragana.
+Why:
+- Command+Space is effectively OS-reserved on the tested setup.
+- Control+Space reaches Blink, but the dedicated 日/英 key is a better app-local default.
