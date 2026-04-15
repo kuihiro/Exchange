@@ -1,11 +1,12 @@
-Delta commit: 9aeed904
-Purpose: use the physical 日/英 key as the shortest-path internal IME control.
+Delta commit: 09e27a62
+Purpose: align internal IME controls with the user's Mac-like workflow on iPad.
 Changed files:
 - Blink/SmarterKeys/SmarterTermInput.swift
 - KB/Native/Views/KBWebView.swift
 Behavior:
-- During active Japanese composition with raw input present: 日/英 key runs no-convert.
-- Otherwise: 日/英 key toggles internal IME mode between ascii and hiragana.
-Why:
-- Command+Space is effectively OS-reserved on the tested setup.
-- Control+Space reaches Blink, but the dedicated 日/英 key is a better app-local default.
+- Left Control tap -> ascii (US)
+- Right Control tap -> hiragana (JP)
+- Control+Space -> toggle ascii/hiragana
+- Globe key -> no-convert when composition/raw input is active
+Notes:
+- This assumes the iPadOS Command/Control swap is enabled, so the physical Mac-like shortcuts arrive as Control-based events inside Blink.

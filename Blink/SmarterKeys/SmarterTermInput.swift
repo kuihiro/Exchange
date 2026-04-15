@@ -89,6 +89,7 @@ class CaretHider {
   private var _caretHider: CaretHider? = nil
   private var _didApplyIMEAppearance = false
   private var _internalSKKMode = "ascii"
+  private let _globeKeyRawValue = 669
 
   private func _debugIME(_ message: String, extra: [String: Any] = [:]) {
     if extra.isEmpty {
@@ -649,6 +650,33 @@ extension SmarterTermInput {
     return true
   }
 
+  func handleNoConvertTriggerKey(reason: String) -> Bool {
+    _debugIME("noConvertTriggerKey", extra: [
+      "reason": reason,
+      "lang": kbView.lang,
+      "lastIME": _lastIMECompositionText,
+      "lastRaw": _lastRawIMECompositionText,
+      "mode": _internalSKKMode,
+    ])
+
+    guard _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty else {
+      return false
+    }
+
+    noConvertComposition()
+    return true
+  }
+
+  func handleControlSpaceToggle() -> Bool {
+    let nextMode = _internalSKKMode == "hiragana" ? "ascii" : "hiragana"
+    _debugIME("controlSpaceToggle", extra: [
+      "from": _internalSKKMode,
+      "to": nextMode,
+    ])
+    _setInternalSKKMode(nextMode, reason: "control-space")
+    return true
+  }
+
   private func _replaceMarkedTextIfPossible(with text: String) -> Bool {
     guard
       !text.isEmpty,
@@ -789,7 +817,8 @@ extension SmarterTermInput {
       key.keyCode == .keyboardLeftControl ||
       key.keyCode == .keyboardRightControl ||
       key.keyCode == .keyboardLeftGUI ||
-      key.keyCode == .keyboardRightGUI
+      key.keyCode == .keyboardRightGUI ||
+      key.keyCode.rawValue == _globeKeyRawValue
 
     guard shouldLog else {
       return
