@@ -1,0 +1,11 @@
+BASELINE
+blink_ime main commit: 7696992e
+local hand-applied base in use: blink_ime-main-mode-badge-source.zip
+
+CHANGED FILES
+Resources/term.js
+Blink/TermView.m
+
+PURPOSE
+Add JS-to-native debug logging for internal IME state.
+Look for lines starting with "BlinkJS" in the Xcode device console export.
