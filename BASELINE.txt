@@ -1,4 +1,4 @@
 Base snapshot: blink_ime-main-mode-badge-source.zip
-Base repository: kuihiro/blink_ime
-Base working assumption: user's local copy is based on the mode-badge source zip, then manual file replacement is applied from this repo.
-Source commit carrying this delta: 47cea5f6
+Apply previous Exchange deltas in order, then apply this delta.
+Source repository: kuihiro/blink_ime
+Delta source commit: 6ec111e6

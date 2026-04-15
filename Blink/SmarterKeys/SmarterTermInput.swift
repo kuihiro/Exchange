@@ -695,11 +695,16 @@ extension SmarterTermInput {
   }
 
   func captureHardwareRawIMEKey(_ key: UIKey) {
-    guard
-      kbView.traits.isHKBAttached,
-      kbView.lang.hasPrefix("ja")
-    else {
+    guard kbView.lang.hasPrefix("ja") else {
       return
+    }
+
+    if !kbView.traits.isHKBAttached {
+      kbView.traits.isHKBAttached = true
+      _debugIME("hardwareKeyboardDetectedFromPress", extra: [
+        "keyCode": key.keyCode.rawValue,
+        "lang": kbView.lang,
+      ])
     }
 
     let flags = key.modifierFlags
