@@ -302,8 +302,13 @@ class KBWebView: KBWebViewBase {
        let smarterInput = self as? SmarterTermInput {
       smarterInput.debugHardwareKeyPhase("ended", key: key)
 
-      if key.keyCode == .keyboardCapsLock,
-         smarterInput.handleJapaneseToggleKey() {
+      if key.keyCode.rawValue == 669,
+         smarterInput.handleNoConvertTriggerKey(reason: "globe") {
+        return
+      }
+
+      if key.keyCode == .keyboardEscape,
+         smarterInput.handleNoConvertTriggerKey(reason: "escape") {
         return
       }
     }

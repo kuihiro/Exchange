@@ -605,16 +605,6 @@ extension SmarterTermInput {
       "mode": _internalSKKMode,
     ])
 
-    if _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty {
-      _debugIME("modifierTap:noConvert", extra: [
-        "keyCode": keyCode.rawValue,
-        "raw": _lastRawIMECompositionText,
-        "composition": _lastIMECompositionText,
-      ])
-      noConvertComposition()
-      return true
-    }
-
     switch keyCode.rawValue {
     case UIKeyboardHIDUsage.keyboardLeftControl.rawValue:
       _debugIME("modifierTap:setUS", extra: [
@@ -629,33 +619,13 @@ extension SmarterTermInput {
       _setInternalSKKMode("hiragana", reason: "modifierTap-rightControl")
       return true
     case UIKeyboardHIDUsage.keyboardLeftGUI.rawValue,
-         UIKeyboardHIDUsage.keyboardRightGUI.rawValue:
+         UIKeyboardHIDUsage.keyboardRightGUI.rawValue,
+         UIKeyboardHIDUsage.keyboardLeftAlt.rawValue,
+         UIKeyboardHIDUsage.keyboardRightAlt.rawValue:
       return handleModifierTapNoConvert()
     default:
       return false
     }
-  }
-
-  func handleJapaneseToggleKey() -> Bool {
-    _debugIME("japaneseToggleKey", extra: [
-      "lang": kbView.lang,
-      "lastIME": _lastIMECompositionText,
-      "lastRaw": _lastRawIMECompositionText,
-      "mode": _internalSKKMode,
-    ])
-
-    if _canRunNoConvertShortcut(), !_lastRawIMECompositionText.isEmpty {
-      _debugIME("japaneseToggleKey:noConvert", extra: [
-        "raw": _lastRawIMECompositionText,
-        "composition": _lastIMECompositionText,
-      ])
-      noConvertComposition()
-      return true
-    }
-
-    let nextMode = _internalSKKMode == "hiragana" ? "ascii" : "hiragana"
-    _setInternalSKKMode(nextMode, reason: "japaneseToggleKey")
-    return true
   }
 
   func handleNoConvertTriggerKey(reason: String) -> Bool {
@@ -671,6 +641,11 @@ extension SmarterTermInput {
       return false
     }
 
+    _debugIME("noConvertTriggerKey:fire", extra: [
+      "reason": reason,
+      "raw": _lastRawIMECompositionText,
+      "composition": _lastIMECompositionText,
+    ])
     noConvertComposition()
     return true
   }
