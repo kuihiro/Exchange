@@ -1,8 +1,0 @@
-Delta commit: 494cfc19
-Purpose: make internal IME mode independent from the current iPadOS language state.
-Changed files:
-- Blink/SmarterKeys/SmarterTermInput.swift
-Behavior:
-- `reportLang` now tells Blink JS the internal-mode language (`ja-JP-x-blink` / `en-US-x-blink`) instead of following the system language directly.
-- Raw key capture and selected key debug logging now follow the internal `hiragana` mode.
-- `setInternalSKKMode` now logs JS-side mode-set completion.

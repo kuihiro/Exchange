@@ -1,4 +1,0 @@
-Base snapshot: blink_ime-main-mode-badge-source.zip
-Apply previous Exchange deltas in order, then apply this delta.
-Source repository: kuihiro/blink_ime
-Delta source commit: 494cfc19
